@@ -29,6 +29,144 @@ struct node{
 };
 
 
+struct date{
+	int day, month, year;
+
+	};
+
+struct date extractDate(struct node*head){
+
+	int day = 0, month = 0, year = 0;
+	struct date d1;
+	d1.day = -1;
+	d1.month = -1;
+	d1.year = -1;
+	if (head == NULL)
+		return d1;
+
+	struct node* temp = head;
+
+	day = temp->data;
+	temp = temp->next;
+	day = day * 10 + temp->data;
+	temp = temp->next;
+
+	month = temp->data;
+	temp = temp->next;
+	month = month * 10 + temp->data;
+	temp = temp->next;
+
+	year = temp->data;
+	temp = temp->next;
+	while (temp){
+		year = year * 10 + temp->data;
+		temp = temp->next;
+		}
+
+	
+	d1.day = day;
+	d1.month = month;
+	d1.year = year;
+
+	return d1;
+
+	}
+
+int getYearDays(struct date date1, struct date date2){
+
+	int days = 0;
+	int months[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+	if (date1.year > date2.year){
+		days += (date1.year - date2.year) * 365;
+		if (date1.month > date2.month){
+			int i = date2.month;
+			while (i < date1.month){
+				days += months[i];
+				i++;
+				}
+
+			}
+		else{
+			int i = date1.month;
+			while (i < date2.month){
+				days += months[i];
+				i++;
+				}
+
+
+			}
+
+
+		}
+	else{
+		days += (date2.year - date1.year) * 365;
+		if (date1.month > date2.month){
+			int i = date2.month;
+			while (i < date1.month){
+				days += months[i];
+				i++;
+				}
+
+			}
+		else{
+			int i = date1.month;
+			while (i < date2.month){
+				days += months[i];
+				i++;
+				}
+
+
+			}
+
+
+		}
+
+	if (date1.year % 4 == 0)
+		days += 1;
+	if (date2.year % 4 == 0)
+		days += 1;
+
+	return days;
+	}
+
+int countDates(struct date date1, struct date date2){
+	int days = 0;
+
+	if (date1.year == date2.year){
+		if (date1.month == date2.month){
+
+			if (date1.day < date2.day)
+				return date2.day - date1.day - 1;
+			else
+				return date1.day - date2.day - 1;
+
+			}
+		else{
+
+
+			}
+
+		}
+	else{
+
+		days += getYearDays(date1, date2);
+
+		}
+
+	return days;
+	}
+
+
 int between_days(struct node *date1head, struct node *date2head){
-	return -1;
-}
+
+	if (date1head == NULL || date2head == NULL)
+		return -1;
+
+	struct date date1 = extractDate(date1head);
+	struct date date2 = extractDate(date2head);
+
+	return countDates(date1, date2);
+
+
+	}
